@@ -2,9 +2,13 @@
 
 import rospy
 import tf2_ros
+import numpy as np
 import geometry_msgs.msg
+from std_msgs.msg import Float32
 from sensor_msgs.msg import Imu
 from geometry_msgs.msg import PoseWithCovarianceStamped
+from tf.transformations import euler_from_quaternion
+
 
 class TransformBroadcaster:
     def __init__(self):
@@ -12,7 +16,8 @@ class TransformBroadcaster:
         self.broadcaster = tf2_ros.TransformBroadcaster()
         self.odom_subscriber = rospy.Subscriber('/leg_odom', PoseWithCovarianceStamped, self.odom_callback)
         self.imu_subscriber = rospy.Subscriber('/imu/data', Imu, self.imu_callback)
-
+        self.yaw_pub = rospy.Publisher('/yaw', Float32, queue_size=10)
+        
         self.position = None
         self.orientation = None
 
@@ -21,6 +26,15 @@ class TransformBroadcaster:
 
     def imu_callback(self, msg):
         self.orientation = msg.orientation
+        _,_,yaw = euler_from_quaternion([msg.orientation.x, msg.orientation.y, msg.orientation.z, msg.orientation.w])
+        yaw = yaw * 180 / np.pi
+   
+        if yaw < 0:
+            yaw = 360 + yaw
+        yaw_msg = Float32()
+        yaw_msg.data = yaw
+        self.yaw_pub.publish(yaw_msg)
+        
 
     def publish_transform(self):
         transform = geometry_msgs.msg.TransformStamped()
