@@ -24,7 +24,7 @@ class DesiredPathMarker:
         self.marker.points.append(pos3)
         self.marker_pub.publish(self.marker)
     
-    def setMarkerColor(self, state):
+    def setMarkerColor(self):
         self.marker.color.a = 1.0
         self.marker.color.r = 0.0
         self.marker.color.g = 1.0

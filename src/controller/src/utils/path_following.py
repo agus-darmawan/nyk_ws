@@ -20,7 +20,7 @@ class PathFollowing:
         self.pid_distance.lower_bound = -1.0
 
         self.path_angle_limit = 60
-        self.path_keep_distance = 2
+        self.path_keep_distance = 0.5
 
         self.angle_error = 0.0
         self.distance_error = 0.0
@@ -113,7 +113,7 @@ class PathFollowing:
             logger.info(f"Arrived Path {self.path_idx}")
             self.path_idx += 1
         
-        self.desired_path_marker.setMarkerColor(self.state)
+        self.desired_path_marker.setMarkerColor()
         self.desired_path_marker.publishMarker(
             self.tf_listener.pos,
             self.main_path.poses[self.path_idx].pose.position,
