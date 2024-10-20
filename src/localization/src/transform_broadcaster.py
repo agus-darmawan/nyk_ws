@@ -57,9 +57,7 @@ class TransformBroadcaster:
             rate.sleep()
 
 if __name__ == '__main__':
-    try:
-        transform_broadcaster = TransformBroadcaster()
-        transform_broadcaster.run()
-    except rospy.ROSInterruptException:
-        pass
+    transform_broadcaster = TransformBroadcaster()
+    transform_broadcaster.run()
+
 
